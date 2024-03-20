@@ -34,6 +34,12 @@ class Place(BaseModel, Base):
     longitude = Column(Float, nullable=True)
     amenity_ids = []
 
+    def __repr__(self):
+        return f"<Place(id='{self.id}', name='{self.name}')>"
+
+    def __str__(self):
+        return f"(hbnb) [[Place] ({self.id}) {{'number_bathrooms': {self.number_bathrooms}, 'longitude': {self.longitude}, 'city_id': '{self.city_id}', 'user_id': '{self.user_id}', 'latitude': {self.latitude}, 'price_by_night': {self.price_by_night}, 'name': '{self.name}', 'id': '{self.id}', 'max_guest': {self.max_guest}, 'number_rooms': {self.number_rooms}, 'updated_at': {self.updated_at}, 'created_at': {self.created_at}}}]"
+
     if getenv("HBNB_TYPE_STORAGE") == "db":
         reviews = relationship("Review", cascade="all, delete,delete-orphan",
                                backref="place")
