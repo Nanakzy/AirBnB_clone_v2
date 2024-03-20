@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """ Place Module for HBNB project """
-from models.base_model import BaseModel
+from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, ForeignKey, Integer, Float, Table
 from sqlalchemy.orm import relationship
 import models
@@ -32,10 +32,10 @@ class Place(BaseModel, Base):
     price_by_night = Column(Integer, nullable=False, default=0)
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)
-    amenity_ids = list of Amenity ids
+    amenity_ids = []
 
     if getenv("HBNB_TYPE_STORAGE") == "db":
-        reviews = relationship("Review", cascade="all, delete,delete-orphan"
+        reviews = relationship("Review", cascade="all, delete,delete-orphan",
                                backref="place")
         amenities = relationship("Amenity", secondary=place_amenity,
                                  viewonly=False,
@@ -47,18 +47,18 @@ class Place(BaseModel, Base):
             Review instances
             with place_id equals to the current Place.id
             """
-        all_objects = models.storage.all()
-        review_list = []
-        result = []
-        for key in all_objects:
-            review = key.replace('.', ' ')
-            review = shlex.split(review)
-            if review[0] == 'Review':
-                review_list.append(all_objects[key])
-        for elem in review_list:
-            if elem.place_id == self.id:
-                result.append(elem)
-        return result
+            all_objects = models.storage.all()
+            review_list = []
+            result = []
+            for key in all_objects:
+                review = key.replace('.', ' ')
+                review = shlex.split(review)
+                if review[0] == 'Review':
+                    review_list.append(all_objects[key])
+            for elem in review_list:
+                if elem.place_id == self.id:
+                    result.append(elem)
+            return result
 
         @property
         def amenities(self):
