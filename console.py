@@ -113,49 +113,63 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
-    def do_create(self, args):
-        """ Create an object of any class """
+    def onecmd(self, line):
+        """Interpret and execute a single command"""
+        if not line:
+            return self.emptyline()
+        cmd, _, line = line.partition(' ')
+        if cmd in self.dot_cmds:
+            return getattr(self, 'do_' + cmd)(line)
+        else:
+            return cmd.Cmd.onecmd(self, line
+
+    def do_create(self, arg):
+        """ Create an object of any class"""
         try:
-            if not args:
-                print("** class name missing **")
-                return
-
-            args_list = args.split()
-            class_name = args_list[0]
+            if not arg:
+                raise SyntaxError()
+            arg_list = arg.split(" ")
             kwargs = {}
+            for arg in arg_list[1:]:
+                key, value = tuple(arg.split("="))
+                if value[0] == '"':
+                    value = value.strip('"').replace("_", " ")
+                else:
+                    try:
+                        value = eval(value)
+                    except (SyntaxError, NameError):
+                        continue
+                kwargs[key] = value
 
-            if class_name not in HBNBCommand.classes:
-                print("** class doesn't exist **")
-                return
+            if kwargs == {}:
+                obj = eval(arg_list[0])()
+            else:
+                obj = eval(arg_list[0])(**kwargs)
+                storage.new(obj)
 
-            if len(args_list) == 1:
-                new_instance = HBNBCommand.classes[class_name]()
-                new_instance.save()
-                print(new_instance.id)
-                return
+            obj.save()
+            print(obj.id)
 
-            for arg in args_list[1:]:
-                if '=' in arg:
-                    key, value = arg.split('=')
-                    if value.startswith('"') and value.endswith('"'):
-                        value = value[1:-1].replace('_', ' ')
-                        kwargs[key] = value
-                    elif '.' in value:
-                        kwargs[key] = float(value)
-                    elif value.isdigit():
-                        kwargs[key] = int(value)
+        except SyntaxError:
+            print("** class name missing **")
+        except NameError:
+            print("** class doesn't exist **")
 
-            new_instance = HBNBCommand.classes[class_name](**kwargs)
-            new_instance.save()
-            print(new_instance.id)
+    def do_show(self, line):
+        """Prints the string representation of an instance
 
-        except Exception as e:
-            print(e)
+        except SyntaxError:
+            print("** class name missing **")
+        except NameError:
+            print("** class doesn't exist **")
+        new_instance = HBNBCommand.classes[arg_list[0]](**kw)
+        new_instance.save()
+        print(new_instance.id)
 
-        def help_create(self):
-            """ Help information for the create method """
-            print("Creates a class of any type")
-            print("[Usage]: create <className>\n")
+    def help_create(self):
+        """ Help information for the create method """
+        print("Creates a class of any type")
+        print("[Usage]: create <className>\n")
 
     def do_show(self, args):
         """ Method to show an individual object """
@@ -232,13 +246,11 @@ class HBNBCommand(cmd.Cmd):
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage._FileStorage__objects.items():
-                if k.split('.')[0] == args:
-                    print_list.append(str(v))
-        else:
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in storage.all(HBNBCommand.classes[args]).items():
                 print_list.append(str(v))
-
+        else:
+            for k, v in storage.all().items():
+                print_list.append(str(v))
         print(print_list)
 
     def help_all(self):
@@ -345,7 +357,6 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
-
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
