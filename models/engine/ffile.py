@@ -1,6 +1,14 @@
 #!/usr/bin/python3
 """This module defines a class to manage file storage for hbnb clone"""
 import json
+from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
+import shlex
 
 
 class FileStorage:
@@ -9,16 +17,22 @@ class FileStorage:
     __objects = {}
 
     def all(self, cls=None):
-        """Returns a dictionary of all objecte  of a specific class"""
-        if cls is None:
-            return {key: value for key, value in self.__objects.items()}
+        """Returns a dictionary of models currently in storage"""
+        dic = {}
+        if cls:
+            dictionary = self.__objects
+            for key in dictionary:
+                partition = key.replace('.', ' ')
+                partition = shlex.split(partition)
+                if (partition[0] == cls.__name__):
+                    dic[key] = self.__objects[key]
+            return (dic)
         else:
-            return self.__objects.get(cls, {})
+            return self.__objects
 
     def new(self, obj):
-        obj_class = type(obj)
         """Adds new object to storage dictionary"""
-        self.__objects.setdefault(obj_class, {})[obj.id] = obj
+        self.all().update({obj.to_dict()['__class__'] + '.' + obj.id: obj})
 
     def save(self):
         """Saves storage dictionary to file"""
@@ -54,12 +68,11 @@ class FileStorage:
             pass
 
     def delete(self, obj=None):
-        """Deletes an object from __objects"""
-        if obj is None:
-            return
+        """ Delete obj from objects -if it is inside """
+        if obj:
+            key = "{}.{}".format(obj.__class__.__name__, obj.id)
+            del self.__objects[key]
 
-        obj_class = type(obj)
-        objs = self.__objects.get(obj_class)
-
-        if objs:
-            del objs[obj.id]
+    def close(self):
+        """ reload function """
+        self.reload()
