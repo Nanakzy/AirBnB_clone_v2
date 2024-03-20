@@ -27,7 +27,8 @@ class test_Amenity(test_basemodel):
         new = self.value()
         self.assertEqual(type(new.name), str)
 
-    class Test_PEP8(unittest.TestCase):
+
+class Test_PEP8(unittest.TestCase):
     """test User"""
     def test_pep8_user(self):
         """test pep8 style"""
@@ -35,7 +36,9 @@ class test_Amenity(test_basemodel):
         result = pep8style.check_files(['models/amenity.py'])
         self.assertEqual(result.total_errors, 0,
                          "Found code style errors (and warnings).")
-    class test_inherit_basemodel(unittest.TestCase):
+
+
+class test_inherit_basemodel(unittest.TestCase):
     """Test if user inherit from BaseModel"""
     def test_instance(self):
         """check if user is an instance of BaseModel"""
@@ -43,6 +46,7 @@ class test_Amenity(test_basemodel):
         self.assertIsInstance(user, Amenity)
         self.assertTrue(issubclass(type(user), BaseModel))
         self.assertEqual(str(type(user)), "<class 'models.amenity.Amenity'>")
+
 
 class test_Amenity_BaseModel(unittest.TestCase):
     """Testing user class"""

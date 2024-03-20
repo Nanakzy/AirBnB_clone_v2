@@ -23,6 +23,7 @@ class test_City(test_basemodel):
         new = self.value()
         self.assertEqual(type(new.name), str)
 
+
 class Test_PEP8(unittest.TestCase):
     """test User"""
 
