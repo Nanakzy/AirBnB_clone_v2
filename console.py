@@ -114,44 +114,48 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_create(self, args):
-        """ Create an object of any class"""
+        """ Create an object of any class """
         try:
             if not args:
                 print("** class name missing **")
                 return
 
-            args = args.split()
-            class_name = args[0]
-            arg_list = {}
+            args_list = args.split()
+            class_name = args_list[0]
+            kwargs = {}
 
             if class_name not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
 
-            if len(args) == 1:
+            if len(args_list) == 1:
                 new_instance = HBNBCommand.classes[class_name]()
                 new_instance.save()
                 print(new_instance.id)
                 return
 
-            for arg in args[1:]:
-                split_arg = arg.split("=")
-                split_arg[1] = eval(split_arg[1])
-            if isinstance(split_arg[1], str):
-                split_arg[1] = split_arg[1].replace('_', '" "').replace('"', '\\"')
-                arg_list[split_arg[0]] = split_arg[1]
+            for arg in args_list[1:]:
+                if '=' in arg:
+                    key, value = arg.split('=')
+                    if value.startswith('"') and value.endswith('"'):
+                        value = value[1:-1].replace('_', ' ')
+                        kwargs[key] = value
+                    elif '.' in value:
+                        kwargs[key] = float(value)
+                    elif value.isdigit():
+                        kwargs[key] = int(value)
 
-                new_instance = HBNBCommand.classes[class_name](**arg_list)
-                new_instance.save()
-                print(new_instance.id)
+            new_instance = HBNBCommand.classes[class_name](**kwargs)
+            new_instance.save()
+            print(new_instance.id)
 
-        except NameError as e:
+        except Exception as e:
             print(e)
 
-    def help_create(self):
-        """ Help information for the create method """
-        print("Creates a class of any type")
-        print("[Usage]: create <className>\n")
+        def help_create(self):
+            """ Help information for the create method """
+            print("Creates a class of any type")
+            print("[Usage]: create <className>\n")
 
     def do_show(self, args):
         """ Method to show an individual object """
