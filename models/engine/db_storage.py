@@ -36,7 +36,7 @@ class DBStorage:
         """
         dictionary = {}
         if cls:
-            onjects = self.__session.query(cls).all()
+            objects = self.__session.query(cls).all()
             for obj in objects:
                 key = f"{obj.__class__.__name__}.{obj.id}"
                 dictionary[key] = obj
@@ -54,7 +54,7 @@ class DBStorage:
         """
         self.__session.add(obj)
 
-    def save(save):
+    def save(self):
         """commit all changes of the current database session
         """
         self.__session.commit()
