@@ -22,10 +22,16 @@ class State(BaseModel, Base):
         """attribute cities that returns the list
         of City instances with state_id equals to the current State.id
         """
-        from models import storage
-        from models.city import City
-        city_list = []
-        for city in storage.all(City).values():
+        all_objects = models.storage.all()
+        city_objects = []
+        filtered_cities = []
+
+        for key, obj in all_objects.items():
+            if isinstance(obj, City):
+                city_objects.append(obj)
+
+        for city in city_objects:
             if city.state_id == self.id:
-                city_list.append(city)
-        return city_list
+                filtered_cities.append(city)
+
+        return filtered_cities
