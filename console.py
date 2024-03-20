@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+
 """Defines the HBNB console."""
 import cmd
 from shlex import split
@@ -67,7 +68,6 @@ class HBNBCommand(cmd.Cmd):
                 obj = eval(my_list[0])(**kwargs)
                 storage.new(obj)
             print(obj.id)
-            obj.save()
 
         except SyntaxError:
             print("** class name missing **")
@@ -135,7 +135,7 @@ class HBNBCommand(cmd.Cmd):
         except IndexError:
             print("** instance id missing **")
         except KeyError:
-            print("** no instance found **")
+            pass
 
     def do_all(self, line):
         """Usage: all or all <class> or <class>.all()
