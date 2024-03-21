@@ -38,6 +38,7 @@ class Place(BaseModel, Base):
         return f"<Place(id='{self.id}', name='{self.name}')>"
 
     def __str__(self):
+
         return (
             f"(hbnb)[[Place]({self.id}){{"
             f"'number_bathrooms': {self.number_bathrooms}, "

@@ -27,7 +27,9 @@ class State(BaseModel, Base):
             'updated_at': self.updated_at,
             'name': self.name
         }
-        return f"[State]({self.id}) {json.dumps(state_dict)}"
+        return f"[State]({self.id}) {{'id': '{self.id}', " \
+               f"'created_at': {self.created_at}, 'updated_at': " \
+               f"{self.updated_at}, 'name': '{self.name}'}}"
 
     @property
     def cities(self):
