@@ -21,7 +21,13 @@ class State(BaseModel, Base):
         return f"<State(id='{self.id}', name='{self.name}')>"
 
     def __str__(self):
-        return f"[State] ({self.id}) {{'id': '{self.id}', 'created_at': {self.created_at}, 'updated_at': {self.updated_at}, 'name': '{self.name}'}}"
+        state_dict = {
+            'id': self.id,
+            'created_at': self.created_at,
+            'updated_at': self.updated_at,
+            'name': self.name
+        }
+        return f"[State]({self.id}) {json.dumps(state_dict)}"
 
     @property
     def cities(self):

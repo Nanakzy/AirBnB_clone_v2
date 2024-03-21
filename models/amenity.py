@@ -5,6 +5,7 @@ from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 from models.place import place_amenity
 
+
 class Amenity(BaseModel, Base):
     """Represents an Amenity for a MySQL database.
     Inherits from SQLAlchemy Base and links to the MySQL table amenities.
