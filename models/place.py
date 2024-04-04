@@ -38,23 +38,22 @@ class Place(BaseModel, Base):
         return f"<Place(id='{self.id}', name='{self.name}')>"
 
     def __str__(self):
-
-        return (
-            f"(hbnb)[[Place]({self.id}){{"
-            f"'number_bathrooms': {self.number_bathrooms}, "
-            f"'longitude': {self.longitude}, "
-            f"'city_id': '{self.city_id}', "
-            f"'user_id': '{self.user_id}', "
-            f"'latitude': {self.latitude}, "
-            f"'price_by_night': {self.price_by_night}, "
-            f"'name': '{self.name}', "
-            f"'id': '{self.id}', "
-            f"'max_guest': {self.max_guest}, "
-            f"'number_rooms': {self.number_rooms}, "
-            f"'updated_at': {self.updated_at}, "
-            f"'created_at': {self.created_at}"
-            "}}]"
-        )
+        created_at_repr = f"datetime.datetime({self.created_at.year}, {self.created_at.month}, {self.created_at.day}, {self.created_at.hour}, {self.created_at.minute}, {self.created_at.second}, {self.created_at.microsecond})"
+        updated_at_repr = f"datetime.datetime({self.updated_at.year}, {self.updated_at.month}, {self.updated_at.day}, {self.updated_at.hour}, {self.updated_at.minute}, {self.updated_at.second}, {self.updated_at.microsecond})"
+        
+        return (f"[[Place] ({self.id}) "
+                f"{{'number_bathrooms': {self.number_bathrooms}, "
+                f"'longitude': {self.longitude}, "
+                f"'city_id': '{self.city_id}', "
+                f"'user_id': '{self.user_id}', "
+                f"'latitude': {self.latitude}, "
+                f"'price_by_night': {self.price_by_night}, "
+                f"'name': '{self.name}', "
+                f"'id': '{self.id}', "
+                f"'max_guest': {self.max_guest}, "
+                f"'number_rooms': {self.number_rooms}, "
+                f"'updated_at': {updated_at_repr}, "
+                f"'created_at': {created_at_repr}}}]")
 
     if getenv("HBNB_TYPE_STORAGE") == "db":
         reviews = relationship("Review", cascade="all, delete,delete-orphan",

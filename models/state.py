@@ -21,15 +21,14 @@ class State(BaseModel, Base):
         return f"<State(id='{self.id}', name='{self.name}')>"
 
     def __str__(self):
-        state_dict = {
-            'id': self.id,
-            'created_at': self.created_at,
-            'updated_at': self.updated_at,
-            'name': self.name
-        }
-        return f"[State]({self.id}) {{'id': '{self.id}', " \
-               f"'created_at': {self.created_at}, 'updated_at': " \
-               f"{self.updated_at}, 'name': '{self.name}'}}"
+        created_at_repr = f"datetime.datetime({self.created_at.year}, {self.created_at.month}, {self.created_at.day}, {self.created_at.hour}, {self.created_at.minute}, {self.created_at.second}, {self.created_at.microsecond})"
+        updated_at_repr = f"datetime.datetime({self.updated_at.year}, {self.updated_at.month}, {self.updated_at.day}, {self.updated_at.hour}, {self.updated_at.minute}, {self.updated_at.second}, {self.updated_at.microsecond})"
+
+        return (f"[State]({self.id}) "
+                f"{{'id': '{self.id}', "
+                f"'created_at': {created_at_repr}, 'updated_at': "
+                f"{updated_at_repr}, 'name': '{self.name}'}}")
+
 
     @property
     def cities(self):
