@@ -38,23 +38,26 @@ def do_pack():
 
 def do_deploy(archive_path):
     """distributes an archive to the web servers"""
-    if exists(archive_path) is False:
+    if not exists(archive_path):
+        print(f"Archive '{archive_path}' does not exist.")
         return False
+
     try:
-        file_n = archive_path.split("/")[-1]
-        no_ext = file_n.split(".")[0]
+        file_name = archive_path.split("/")[-1]
+        no_ext = file_name.split(".")[0]
         path = "/data/web_static/releases/"
         put(archive_path, '/tmp/')
-        run('mkdir -p {}{}/'.format(path, no_ext))
-        run('tar -xzf /tmp/{} -C {}{}/'.format(file_n, path, no_ext))
-        run('rm /tmp/{}'.format(file_n))
-        run('mv {0}{1}/web_static/* {0}{1}/'.format(path, no_ext))
-        run('rm -rf {}{}/web_static'.format(path, no_ext))
-        run('rm -rf /data/web_static/current')
-        run('ln -s {}{}/ /data/web_static/current'.format(path, no_ext))
+        run(f'mkdir -p {path}{no_ext}/')
+        run(f'tar -xzf /tmp/{file_name} -C {path}{no_ext}/')
+        run(f'rm /tmp/{file_name}')
+        run(f'mv {path}{no_ext}/web_static/* {path}{no_ext}/')
+        run(f'rm -rf {path}{no_ext}/web_static')
+        run(f'rm -rf /data/web_static/current')
+        run(f'ln -s {path}{no_ext}/ /data/web_static/current')
+        print("New version deployed!")
         return True
-    except Exception as e:
-        logging.exception("Error occurred during deployment:")
+    except FileNotFoundError:
+        print("File not found.")
         return False
 
 

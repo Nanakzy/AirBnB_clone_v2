@@ -6,12 +6,6 @@ archive to the web servers
 
 from fabric.api import put, run, env
 from os.path import exists
-import logging
-
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 env.hosts = ['34.239.254.111', '35.153.66.238']
 
 
@@ -35,11 +29,6 @@ def do_deploy(archive_path):
         run(f'ln -s {path}{no_ext}/ /data/web_static/current')
         logger.info("New version deployed!")
         return True
-    except Exception as e:
-        logger.exception("Error occurred during deployment:")
+    except FileNotFoundError:
+        print("File not found.")
         return False
-
-
-# Example usage
-archive_path = 'versions/web_static_20170315003959.tgz'
-do_deploy(archive_path)
