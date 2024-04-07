@@ -52,7 +52,7 @@ def do_deploy(archive_path):
         run(f'mv {path}{no_ext}/web_static/* {path}{no_ext}/')
         run(f'rm -rf {path}{no_ext}/web_static')
         run(f'rm -rf /data/web_static/current')
-        run(f'ln -s {}{}/ /data/web_static/current'.format(path, no_ext))
+        run(f'ln -s {path}{no_ext}/ /data/web_static/current')
         return True
     except FileNotFoundError:
         print("File not found.")
