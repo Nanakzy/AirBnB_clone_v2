@@ -11,8 +11,7 @@ env.hosts = ['34.239.254.111', '35.153.66.238']
 
 def do_deploy(archive_path):
     """Distribute an archive to the web servers."""
-    if not exists(archive_path):
-        logger.error(f"Archive '{archive_path}' does not exist.")
+    if not exists(archive_path) is False:
         return False
 
     try:
@@ -26,8 +25,7 @@ def do_deploy(archive_path):
         run(f'mv {path}{no_ext}/web_static/* {path}{no_ext}/')
         run(f'rm -rf {path}{no_ext}/web_static')
         run(f'rm -rf /data/web_static/current')
-        run(f'ln -s {path}{no_ext}/ /data/web_static/current')
-        logger.info("New version deployed!")
+        run(f'ln -s {}{}/ /data/web_static/current'.format(path, no_ext))
         return True
     except FileNotFoundError:
         print("File not found.")
